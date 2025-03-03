@@ -55,5 +55,6 @@ This script is intended to automate the configuration and installation of the Or
    su - oracle
    cd /ora1/app/database
    chmod +x runInstaller
+   export DISPLAY=:0.
    ./runInstaller
    ```
