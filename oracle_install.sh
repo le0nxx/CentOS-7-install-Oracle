@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # 检查 SELinux 状态
+echo "==== 检查 SELinux 状态 ===="
+sleep 2
 SELINUX_STATUS=$(sestatus | awk '/SELinux status/ {print $3}')
 if [ "$SELINUX_STATUS" != "disabled" ]; then
     if grep -q "^SELINUX=enforcing" /etc/selinux/config || grep -q "^SELINUX=permissive" /etc/selinux/config; then
@@ -28,10 +30,10 @@ else
         read -n 1 -s -r -p "按任意键退出..."
         exit 1
     fi
+    yum clean all
+    yum makecache fast
 fi
 
-yum clean all
-yum makecache fast
 yum update -y
 echo "==== 系统更新完成 ===="
 sleep 1
@@ -53,8 +55,8 @@ if ! id oracle &>/dev/null; then
     useradd -u 502 -g oinstall -G dba,oper oracle
     echo "==== 自动设置 oracle 用户密码为 oracle ===="
     echo "oracle" | passwd --stdin oracle
-    cp /etc/skel/.bashrc /home/oracle/
-    cp /etc/skel/.bash_profile /home/oracle/
+    cp /etc/skel/.bashrc /home/oracle/ -y
+    cp /etc/skel/.bash_profile /home/oracle/ -y
 fi
 echo "==== 创建组与用户完成 ===="
 sleep 1
@@ -114,13 +116,7 @@ sleep 2
 
 echo "==== 安装Oracle依赖包 ===="
 sleep 2
-yum -y install binutils compat compat-libstdc gcc gcc-c++ glibc glibc-devel ksh libaio libaio-devel libgcc libstdc++ libstdc++-devel libXi libXtst make sysstat unixODBC unixODBC-devel
-
-if [ $? -ne 0 ]; then
-    echo "==== 依赖包安装失败，请检查YUM源及网络连接 ===="
-    read -n 1 -s -r -p "按任意键退出..."
-    exit 1
-fi
+yum -y install elfutils-libelf-devel binutils compat compat-libstdc gcc gcc-c++ glibc glibc-devel ksh libaio libaio-devel libgcc libstdc++ libstdc++-devel libXi libXtst make sysstat unixODBC unixODBC-devel
 
 echo "==== 检查依赖包安装情况 ===="
 sleep 2
