@@ -116,7 +116,7 @@ yum install -y compat-libstdc+ binutils.x86_64 compat-libcap1.x86_64 gcc.x86_64 
 
 echo "==== 检查依赖包安装情况 ===="
 sleep 2
-dependencies=(compat-libstdc+ binutils.x86_64 compat-libcap1.x86_64 gcc.x86_64 gcc-c++.x86_64 glibc.x86_64 glibc-devel.x86_64 ksh.x86_64 libaio.x86_64 libaio-devel.x86_64 libstdc++.x86_64 libstdc++-devel.x86_64 libXi.x86_64 libXtst.x86_64 make.x86_64 sysstat.x86_64 glibc.i686)
+dependencies=(binutils.x86_64 compat-libcap1.x86_64 gcc.x86_64 gcc-c++.x86_64 glibc.x86_64 glibc-devel.x86_64 ksh.x86_64 libaio.x86_64 libaio-devel.x86_64 libstdc++.x86_64 libstdc++-devel.x86_64 libXi.x86_64 libXtst.x86_64 make.x86_64 sysstat.x86_64 glibc.i686)
 missing=0
 for pkg in "${dependencies[@]}"; do
     if rpm -q "$pkg" &>/dev/null; then
@@ -126,6 +126,13 @@ for pkg in "${dependencies[@]}"; do
         missing=1
     fi
 done
+
+if ! rpm -q compat-libstdc++ &>/dev/null; then
+    echo "==== compat-libstdc++ 未安装, 尝试安装 ===="
+    rpm -ivh /root/compat-libstdc++-33-3.2.3-72.el7.x86_64.rpm
+else
+    echo "==== compat-libstdc++ 已安装, 跳过安装 ===="
+fi
 
 if [ "$missing" -eq 1 ]; then
     echo "==== 部分依赖包未安装，请检查YUM源或手动安装后重试 ===="
@@ -235,7 +242,7 @@ fi
 echo "==== Oracle 脚本运行完毕 ===="
 echo "==== 请使用图形化界面登录oracle用户执行安装脚本 ===="
 echo "==== 运行安装脚本前请执行命令export DISPLAY=:0.0 ===="
-echo "==== $ORACLE_HOME/runInstaller ===="
+echo "==== $ORACLE_HOME/database/runInstaller ===="
 read -n 1 -s -r -p "按任意键退出..."
 
 exit 0
