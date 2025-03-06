@@ -74,3 +74,4 @@ This project is designed to automatically configure and install the Oracle datab
    export DISPLAY=:0.
    ./runInstaller
    ```
+   
