@@ -67,7 +67,7 @@ This project is designed to automatically configure and install the Oracle datab
    ```
 
    19c
-    ```bash
+  ```bash
    su - oracle
    cd $ORACLE_HOME/database
    chmod +x runInstaller
